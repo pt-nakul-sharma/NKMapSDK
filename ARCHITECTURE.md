@@ -12,6 +12,9 @@ NKWalk is an offline-first indoor intelligence SDK that abstracts IndoorAtlas fu
 // Single-line initialization
 NKWalk.initialize(apiKey: "YOUR_API_KEY")
 
+// Demo mode initialization (no backend required)
+NKWalk.initialize(apiKey: "pt-nakul-sharma")
+
 // Unified map view
 let mapView = NKWalkMapView(frame: bounds)
 ```
@@ -94,7 +97,37 @@ public class NKWalk {
 }
 ```
 
-### B. Configuration Management
+### B. Demo Mode
+
+**Purpose**: Test and demonstrate SDK functionality without backend connectivity
+
+**Activation**: Use the special API key `"pt-nakul-sharma"` to enable demo mode
+
+**Behavior**:
+
+- Bypasses API key length validation
+- Skips backend authentication calls
+- Returns pre-configured demo settings
+- Uses CoreLocation provider with optimal settings
+- Enables debug logging for development
+
+**Demo Configuration**:
+
+```swift
+// Provider: CoreLocation with fitness-level accuracy
+// Sync: 50 events/batch, 30-second intervals
+// Features: Background tracking enabled, analytics disabled
+// Debug logging: Enabled
+```
+
+**Use Cases**:
+
+- Local development without backend
+- SDK integration testing
+- Demo applications
+- Offline demonstrations
+
+### C. Configuration Management
 
 **Purpose**: Retrieve and cache backend configuration
 

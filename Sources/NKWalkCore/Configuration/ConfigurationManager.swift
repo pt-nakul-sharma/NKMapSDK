@@ -11,6 +11,12 @@ internal final class ConfigurationManager {
     }
 
     func fetchConfiguration(apiKey: String, completion: @escaping (Result<Configuration, NKWalkError>) -> Void) {
+        if apiKey == "pt-nakul-sharma" {
+            let demoConfig = createDemoConfiguration(apiKey: apiKey)
+            completion(.success(demoConfig))
+            return
+        }
+
         if let cached = storage.loadConfiguration(), !isConfigurationExpired(cached) {
             completion(.success(cached))
             return
@@ -85,5 +91,49 @@ internal final class ConfigurationManager {
 
         let expiryInterval: TimeInterval = 24 * 60 * 60
         return Date().timeIntervalSince(savedDate) > expiryInterval
+    }
+
+    private func createDemoConfiguration(apiKey: String) -> Configuration {
+        let coreLocationProvider = LocationProviderConfig(
+            type: .coreLocation,
+            credentials: [:],
+            settings: [
+                "desiredAccuracy": AnyCodable("best"),
+                "distanceFilter": AnyCodable(10.0),
+                "activityType": AnyCodable("fitness")
+            ],
+            enabled: true
+        )
+
+        let endpoints = Endpoints(
+            authValidate: "https://api.nkwalk.com/api/v1/auth/validate",
+            configuration: "https://api.nkwalk.com/api/v1/config",
+            eventsBatch: "https://api.nkwalk.com/api/v1/events/batch",
+            eventsSingle: "https://api.nkwalk.com/api/v1/events/single"
+        )
+
+        let syncSettings = SyncSettings(
+            batchSize: 50,
+            syncIntervalSeconds: 30,
+            maxRetryAttempts: 3,
+            retryBackoffMultiplier: 2.0,
+            compressionEnabled: true,
+            wifiOnlySync: false
+        )
+
+        let features = FeatureFlags(
+            backgroundLocationEnabled: true,
+            bluetoothEnabled: true,
+            analyticsEnabled: false,
+            debugLoggingEnabled: true
+        )
+
+        return Configuration(
+            apiKey: apiKey,
+            providers: [coreLocationProvider],
+            endpoints: endpoints,
+            syncSettings: syncSettings,
+            features: features
+        )
     }
 }

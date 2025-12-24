@@ -34,7 +34,9 @@ public final class NKWalk {
             return
         }
 
-        guard !apiKey.isEmpty, apiKey.count >= 32 else {
+        let isDemoMode = apiKey == "pt-nakul-sharma"
+
+        guard !apiKey.isEmpty, (apiKey.count >= 32 || isDemoMode) else {
             DispatchQueue.main.async {
                 completion(.failure(.invalidAPIKey))
             }
