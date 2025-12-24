@@ -26,27 +26,13 @@ internal final class CoreLocationProvider: NSObject, LocationProvider {
         locationManager?.desiredAccuracy = kCLLocationAccuracyBest
         locationManager?.distanceFilter = 1.0
 
-        if #available(iOS 14.0, *) {
-            switch locationManager?.authorizationStatus {
-            case .authorizedAlways, .authorizedWhenInUse:
-                locationManager?.startUpdatingLocation()
-                status = .running
-            case .notDetermined:
-                throw LocationProviderError.permissionDenied
-            case .denied, .restricted:
-                throw LocationProviderError.permissionDenied
-            default:
-                throw LocationProviderError.permissionDenied
-            }
-        } else {
-            let authStatus = CLLocationManager.authorizationStatus()
-            switch authStatus {
-            case .authorizedAlways, .authorizedWhenInUse:
-                locationManager?.startUpdatingLocation()
-                status = .running
-            default:
-                throw LocationProviderError.permissionDenied
-            }
+        let authStatus = locationManager?.authorizationStatus ?? .notDetermined
+        switch authStatus {
+        case .authorizedAlways, .authorizedWhenInUse:
+            locationManager?.startUpdatingLocation()
+            status = .running
+        default:
+            throw LocationProviderError.permissionDenied
         }
     }
 

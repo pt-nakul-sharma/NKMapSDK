@@ -1,7 +1,7 @@
 import Foundation
 import CoreLocation
 
-internal final class GoogleMapsProvider: NSObject, LocationProvider {
+internal final class StandardLocationProvider: NSObject, LocationProvider {
 
     weak var delegate: LocationProviderDelegate?
     private(set) var status: LocationProviderStatus = .idle
@@ -25,12 +25,7 @@ internal final class GoogleMapsProvider: NSObject, LocationProvider {
         locationManager?.desiredAccuracy = kCLLocationAccuracyBest
         locationManager?.distanceFilter = 1.0
 
-        let authStatus: CLAuthorizationStatus
-        if #available(iOS 14.0, *) {
-            authStatus = locationManager?.authorizationStatus ?? .notDetermined
-        } else {
-            authStatus = CLLocationManager.authorizationStatus()
-        }
+        let authStatus = locationManager?.authorizationStatus ?? .notDetermined
 
         switch authStatus {
         case .authorizedAlways, .authorizedWhenInUse:
@@ -56,7 +51,7 @@ internal final class GoogleMapsProvider: NSObject, LocationProvider {
     }
 }
 
-extension GoogleMapsProvider: CLLocationManagerDelegate {
+extension StandardLocationProvider: CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         for location in locations {
@@ -64,7 +59,7 @@ extension GoogleMapsProvider: CLLocationManagerDelegate {
 
             var metadata: [String: String] = [
                 "event_type": "position",
-                "provider_type": "google_maps"
+                "provider_type": "standard"
             ]
 
             if let floor = floor {
@@ -85,7 +80,7 @@ extension GoogleMapsProvider: CLLocationManagerDelegate {
                 accuracy: location.horizontalAccuracy,
                 heading: location.course >= 0 ? location.course : nil,
                 speed: location.speed >= 0 ? location.speed : nil,
-                provider: "google_maps",
+                provider: "standard",
                 metadata: metadata
             )
 

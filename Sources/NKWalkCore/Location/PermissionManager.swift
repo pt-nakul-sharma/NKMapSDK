@@ -2,7 +2,6 @@ import Foundation
 import CoreLocation
 import CoreBluetooth
 
-@available(iOS 14.0, *)
 internal final class PermissionManager: NSObject {
 
     private var locationManager: CLLocationManager?

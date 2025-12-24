@@ -42,7 +42,7 @@ public struct LocationProviderConfig: Codable {
 }
 
 public enum ProviderType: String, Codable {
-    case googleMaps = "google_maps"
+    case standard = "standard"
     case coreLocation = "core_location"
     case indoorAtlas = "indoor_atlas"  // Reserved for future implementation
     case custom = "custom"

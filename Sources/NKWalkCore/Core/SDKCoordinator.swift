@@ -63,8 +63,8 @@ public final class SDKCoordinator {
         }
 
         switch providerConfig.type {
-        case .googleMaps:
-            let provider = GoogleMapsProvider(config: providerConfig)
+        case .standard:
+            let provider = StandardLocationProvider(config: providerConfig)
             provider.delegate = self
             self.locationProvider = provider
 
@@ -74,7 +74,7 @@ public final class SDKCoordinator {
             self.locationProvider = provider
 
         case .indoorAtlas:
-            completion(.failure(.configurationFailed(reason: "IndoorAtlas provider not yet implemented. Use 'google_maps' or 'core_location'.")))
+            completion(.failure(.configurationFailed(reason: "IndoorAtlas provider not yet implemented. Use 'standard' or 'core_location'.")))
             return
 
         case .custom:

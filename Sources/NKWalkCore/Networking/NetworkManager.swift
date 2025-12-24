@@ -41,11 +41,9 @@ internal final class NetworkManager {
             var data = try encoder.encode(payload)
 
             if compressed && data.count > 1024 {
-                if #available(iOS 13.0, *) {
-                    if let compressed = try? (data as NSData).compressed(using: .lzfse) as Data {
-                        data = compressed
-                        request.setValue("lzfse", forHTTPHeaderField: "Content-Encoding")
-                    }
+                if let compressed = try? (data as NSData).compressed(using: .lzfse) as Data {
+                    data = compressed
+                    request.setValue("lzfse", forHTTPHeaderField: "Content-Encoding")
                 }
             }
 
